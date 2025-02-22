@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
@@ -55,12 +55,31 @@ body {
 }
 
 .btn--light {
-    background: white;
-    color: #1f2937;
+    background: transparent;
+    color: white;
+    padding: 0;
+    text-decoration: none;
+    position: relative;
+    border-radius: 0;
+}
+
+.btn--light::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: white;
+    transition: width 0.3s ease;
 }
 
 .btn--light:hover {
-    background: #f3f4f6;
+    background: transparent;
+}
+
+.btn--light:hover::after {
+    width: 100%;
 }
 
 .btn--text {
