@@ -323,7 +323,7 @@ body {
     flex: 1;
 }
 
-/* Realities Section */
+/* Realities Section Styles */
 .realities {
     background-color: #1a237e;
     padding: 100px 0;
@@ -354,13 +354,15 @@ body {
 }
 
 .realities__achievements {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 15px;
     padding: 40px;
     margin-top: 40px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .realities__content-title {
@@ -392,6 +394,37 @@ body {
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 30px;
+}
+
+/* Button Styles */
+.btn--text {
+    background: transparent;
+    padding: 0;
+    text-decoration: none;
+    position: relative;
+    border-radius: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn--text::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #90CAF9;
+    transition: width 0.3s ease;
+}
+
+.btn--text:hover {
+    background: transparent;
+}
+
+.btn--text:hover::after {
+    width: 100%;
 }
 
 /* Impact Section */
