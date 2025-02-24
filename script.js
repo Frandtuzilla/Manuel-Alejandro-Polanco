@@ -1,68 +1,50 @@
-// Mobile menu toggle
-const menuButton = document.getElementById('menuButton');
-const navLinks = document.getElementById('navLinks');
-
-menuButton.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    menuButton.textContent = navLinks.classList.contains('active') ? 'Close' : 'Menu';
-});
-
-// Close mobile menu when clicking a link
-navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        menuButton.textContent = 'Menu';
-    });
-});
-
-// Navigation arrows functionality
-document.addEventListener('DOMContentLoaded', () => {
-    const leftArrow = document.querySelector('.nav-arrow.left');
-    const rightArrow = document.querySelector('.nav-arrow.right');
-
-    leftArrow.addEventListener('click', () => {
-        // Add slide functionality if needed
-        console.log('Navigate left');
-    });
-
-    rightArrow.addEventListener('click', () => {
-        // Add slide functionality if needed
-        console.log('Navigate right');
-    });
-
-    // Form handling
-    const contactForm = document.getElementById('contactForm');
-    
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // Add your form submission logic here
-        console.log('Form submitted');
-    });
-});
-
 // EmailJS Implementation for both contact forms
 document.addEventListener('DOMContentLoaded', function() {
-    // First, add EmailJS SDK to the page if it's not already included
-    if (!window.emailjs) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-        script.async = true;
-        document.head.appendChild(script);
-        
-        script.onload = function() {
-            initializeEmailJS();
-        };
-    } else {
-        initializeEmailJS();
-    }
+    // Check for mobile menu elements (wrap in conditional to prevent errors)
+    const menuButton = document.getElementById('menuButton');
+    const navLinks = document.getElementById('navLinks');
     
-    function initializeEmailJS() {
-        // Initialize EmailJS with your user ID (replace with your actual EmailJS user ID)
+    if (menuButton && navLinks) {
+        menuButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuButton.textContent = navLinks.classList.contains('active') ? 'Close' : 'Menu';
+        });
+        
+        // Close mobile menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuButton.textContent = 'Menu';
+            });
+        });
+    }
+
+    // Navigation arrows functionality (wrap in conditional to prevent errors)
+    const leftArrow = document.querySelector('.hero__nav-arrow--left');
+    const rightArrow = document.querySelector('.hero__nav-arrow--right');
+
+    if (leftArrow && rightArrow) {
+        leftArrow.addEventListener('click', () => {
+            // Add slide functionality if needed
+            console.log('Navigate left');
+        });
+
+        rightArrow.addEventListener('click', () => {
+            // Add slide functionality if needed
+            console.log('Navigate right');
+        });
+    }
+
+    // Initialize EmailJS
+    if (window.emailjs) {
+        console.log("EmailJS is loaded and available");
         emailjs.init("Cj7onGuIZJeiXYXED");
         
         // Configure both forms
         setupHeroForm();
         setupFooterForm();
+    } else {
+        console.error("EmailJS is not loaded properly");
     }
 
     // Setup for Hero Contact Form
@@ -70,8 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const heroForm = document.getElementById('heroContactForm');
         
         if (heroForm) {
+            console.log("Hero form found in DOM");
+            
             heroForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+                console.log("Hero form submitted");
                 
                 // Add loading state
                 const submitBtn = heroForm.querySelector('button[type="submit"]');
@@ -79,34 +64,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.textContent = 'Sending...';
                 submitBtn.disabled = true;
                 
-                // Get form fields - using the existing structure without changing IDs
-                const firstNameInput = heroForm.querySelector('input[name="firstName"]');
-                const emailInput = heroForm.querySelector('input[name="email"]');
-                const commentInput = heroForm.querySelector('textarea[name="comment"]');
+                // Get form fields
+                const firstNameInput = document.getElementById('heroFirstName');
+                const emailInput = document.getElementById('heroEmail');
+                const commentInput = document.getElementById('heroComment');
+                
+                if (!firstNameInput || !emailInput || !commentInput) {
+                    console.error("One or more hero form fields not found");
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
+                }
                 
                 // Collect form data
                 const formData = {
                     first_name: firstNameInput.value,
+                    last_name: "",
                     email: emailInput.value,
                     message: commentInput.value,
                     form_name: 'Hero Contact Form'
                 };
                 
+                console.log("Sending hero form data:", formData);
+                
                 // Send the form using EmailJS
                 emailjs.send(
-                    'service_ijhm2nv', // Replace with your EmailJS service ID
-                    'template_jm90lfe', // Replace with your EmailJS template ID
+                    'service_ijhm2nv',
+                    'template_jm90lfe', 
                     formData
                 )
                 .then(function(response) {
-                    // Success message
+                    console.log("EmailJS Success Response:", response);
                     showToast('Thank you! Your message has been sent.', 'success');
                     heroForm.reset();
                 })
                 .catch(function(error) {
-                    // Error message
+                    console.error('EmailJS Error:', error);
                     showToast('Oops! Something went wrong.', 'error');
-                    console.error('EmailJS error:', error);
                 })
                 .finally(function() {
                     // Reset button state
@@ -114,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.disabled = false;
                 });
             });
+        } else {
+            console.error("Hero form not found in DOM");
         }
     }
     
@@ -122,8 +118,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const footerForm = document.getElementById('footerContactForm');
         
         if (footerForm) {
+            console.log("Footer form found in DOM");
+            
+            // Add IDs to footer form elements (if they don't have them)
+            const footerInputs = footerForm.querySelectorAll('input, textarea');
+            if (footerInputs[0] && !footerInputs[0].id) footerInputs[0].id = 'footerFirstName';
+            if (footerInputs[1] && !footerInputs[1].id) footerInputs[1].id = 'footerLastName';
+            if (footerInputs[2] && !footerInputs[2].id) footerInputs[2].id = 'footerEmail';
+            if (footerInputs[3] && !footerInputs[3].id) footerInputs[3].id = 'footerComment';
+            
             footerForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+                console.log("Footer form submitted");
                 
                 // Add loading state
                 const submitBtn = footerForm.querySelector('button[type="submit"]');
@@ -131,12 +137,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.textContent = 'Sending...';
                 submitBtn.disabled = true;
                 
-                // Get all input elements - using the existing structure
-                const inputs = footerForm.querySelectorAll('input, textarea');
-                const firstNameInput = inputs[0]; // First input in the form
-                const lastNameInput = inputs[1]; // Second input in the form
-                const emailInput = inputs[2]; // Third input in the form
-                const messageInput = inputs[3]; // Fourth input (textarea) in the form
+                // Get form fields (now with IDs)
+                const firstNameInput = document.getElementById('footerFirstName');
+                const lastNameInput = document.getElementById('footerLastName');
+                const emailInput = document.getElementById('footerEmail');
+                const messageInput = document.getElementById('footerComment');
+                
+                if (!firstNameInput || !lastNameInput || !emailInput || !messageInput) {
+                    console.error("One or more footer form fields not found");
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                    return;
+                }
                 
                 // Collect form data
                 const formData = {
@@ -147,21 +159,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     form_name: 'Footer Contact Form'
                 };
                 
+                console.log("Sending footer form data:", formData);
+                
                 // Send the form using EmailJS
                 emailjs.send(
-                    'service_ijhm2nv', // Replace with your EmailJS service ID
-                    'template_nfgh15s', // Replace with your EmailJS template ID
+                    'service_ijhm2nv',
+                    'template_nfgh15s',
                     formData
                 )
                 .then(function(response) {
-                    // Success message
+                    console.log("EmailJS Success Response:", response);
                     showToast('Thank you! Your message has been sent.', 'success');
                     footerForm.reset();
                 })
                 .catch(function(error) {
-                    // Error message
+                    console.error('EmailJS Error:', error);
                     showToast('Oops! Something went wrong.', 'error');
-                    console.error('EmailJS error:', error);
                 })
                 .finally(function() {
                     // Reset button state
@@ -169,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.disabled = false;
                 });
             });
+        } else {
+            console.error("Footer form not found in DOM");
         }
     }
 
