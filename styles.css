@@ -269,7 +269,7 @@ body {
 .form__row {
     display: flex;
     gap: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 /* About Section */
@@ -631,13 +631,13 @@ body {
     font-size: 48px;
     font-weight: 700;
     line-height: 1.2;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .contact__text {
     font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     opacity: 0.9;
 }
 
@@ -645,7 +645,7 @@ body {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .contact__logos {
@@ -655,7 +655,7 @@ body {
 }
 
 .contact__logo {
-    height: 40px;
+    height: 150px;
     width: auto;
     filter: brightness(0) invert(1);
     opacity: 0.9;
